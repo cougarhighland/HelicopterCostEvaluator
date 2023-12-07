@@ -17,13 +17,26 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-export default function BasicTable({ inputData }) {
+export default function SpecificTable({ inputData }) {
   // Check if inputData is undefined, empty, or the first element is undefined
   if (!inputData || inputData.length === 0 || !inputData[0]) {
     console.error('inputData is undefined or empty');
     return null;
   }
 
+  // Initialize an array to store rows of data
+  const rows = [];
+
+  // Iterate through the elements at index 1 of inputData (assuming inputData[0] is headers)
+  for (let i = 0; i < inputData[1].length; i++) {
+    // Create an object for each row with corresponding column values
+    rows.push({
+      col1: inputData[1][i],
+      col2: inputData[2][i],
+      col3: inputData[3][i],
+      col4: inputData[4][i],
+    });
+  }
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -31,32 +44,30 @@ export default function BasicTable({ inputData }) {
           <TableRow>
             {
               // map over the keys of the first object in the array
-              Object.keys(inputData[0]).map((key, i) => (
+              inputData[0].map((categories, index) => (
                 // create a table cell for each key
-                <StyledTableCell key={i} align={i === 0 ? 'left' : 'right'}>
-                  {key}
+                <StyledTableCell
+                  key={index}
+                  align={index === 0 ? 'left' : 'right'}
+                >
+                  {categories}
                 </StyledTableCell>
               ))
             }
           </TableRow>
         </TableHead>
         <TableBody>
-          {inputData.map((row) => (
+          {rows.map((row) => (
             <TableRow
-              key={row.Name}
+              key={row.col1}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.Name}
+                {row.col1}
               </TableCell>
-              <TableCell align="right">{row.Type}</TableCell>
-              <TableCell align="right">{row.Quantity}</TableCell>
-              <TableCell align="right">{row['Price ($)']}</TableCell>
-              <TableCell align="right">
-                {row['Failure rate (1/year)']}
-              </TableCell>
-              <TableCell align="right">{row.Description}</TableCell>
-              <TableCell align="right">{row.Parent}</TableCell>
+              <TableCell align="right">{row.col2}</TableCell>
+              <TableCell align="right">{row.col3}</TableCell>
+              <TableCell align="right">{row.col4}</TableCell>
             </TableRow>
           ))}
         </TableBody>
