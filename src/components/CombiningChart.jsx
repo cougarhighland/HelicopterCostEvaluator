@@ -8,14 +8,14 @@ export default function CombiningChart({ dataSet }) {
   const series = [
     {
       type: 'bar',
-      stack: '',
+      stack: 'stack1',
       yAxisKey: 'cost',
       data: dataSet[2],
       label: 'Total Price',
     },
     {
       type: 'bar',
-      stack: '',
+      stack: 'stack2',
       yAxisKey: 'cost',
       data: dataSet[3],
       label: 'Annual Failure Cost',
