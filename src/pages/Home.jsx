@@ -3,6 +3,8 @@ import CSVReader from '../components/CSVReader';
 import { Typography, Box } from '@mui/material';
 import SpecificTable from '../components/SpecificTable';
 import BasicTable from '../components/BasicTable';
+import BarLineChart from '../components/BarLineChart';
+import CombiningChart from '../components/CombiningChart';
 
 const Home = () => {
   // Define state to hold received data from CSVReader component
@@ -43,7 +45,7 @@ const Home = () => {
     receivedData.forEach((part) => {
       const cal = part.Quantity * part['Price ($)'].replace(/\$|,/g, '');
       sum += cal;
-      cal == 0 ? totalPrice.push('NA') : totalPrice.push(cal);
+      cal == 0 ? totalPrice.push(0) : totalPrice.push(cal);
     });
 
     return { sum, totalPrice };
@@ -67,7 +69,7 @@ const Home = () => {
         sum += cal;
         failureCostList.push(cal);
       } else {
-        failureCostList.push('NA');
+        failureCostList.push(0);
       }
     }
 
@@ -82,8 +84,8 @@ const Home = () => {
     failureRateList.map((item) => {
       // Check if item is not undefined or an empty string before pushing to MTBFList
       item !== undefined && item !== ''
-        ? MTBFList.push((1 / item).toFixed(3))
-        : MTBFList.push('NA');
+        ? MTBFList.push(Number((1 / item).toFixed(3)))
+        : MTBFList.push(0);
     });
 
     return MTBFList;
@@ -106,13 +108,13 @@ const Home = () => {
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'flex-start',
-              height: '100vh',
+              width: '100%',
             }}
           >
             <Typography
               fontSize="xl4"
               variant="h3"
-              sx={{ mt: 1, mb: 1 }}
+              sx={{ mt: 3, mb: 1 }}
               align="left"
             >
               Analyse Table
@@ -132,6 +134,32 @@ const Home = () => {
             <Typography fontSize="xl4" variant="h5" sx={{ mt: 1 }} align="left">
               Total of Annual Failure Cost: ${failureCost().sum}
             </Typography>
+            <Typography
+              fontSize="xl4"
+              variant="h3"
+              sx={{ mt: 1, mb: 1 }}
+              align="left"
+            >
+              Charts
+            </Typography>
+            <BarLineChart
+              dataset={[
+                COL_NAME,
+                extractColumn().productName,
+                sumOfAllParts().totalPrice,
+                failureCost().failureCostList,
+                calculateMTBF(),
+              ]}
+            />
+            <CombiningChart
+              dataSet={[
+                COL_NAME,
+                extractColumn().productName,
+                sumOfAllParts().totalPrice,
+                failureCost().failureCostList,
+                calculateMTBF(),
+              ]}
+            />
           </Box>
         </>
       )}
